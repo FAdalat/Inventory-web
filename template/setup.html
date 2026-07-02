@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Set up your shop{% endblock %}
+
+{% block content %}
+  <h2>Welcome — let's set up your shop</h2>
+  <p class="hint">This runs once. Create the first shop owner account; you
+    can add sales manager accounts afterward from the Employees tab.</p>
+
+  <form method="POST">
+    <label>Username
+      <input type="text" name="username" required autofocus>
+    </label>
+    <label>Password
+      <input type="password" name="password" required minlength="6">
+    </label>
+    <label>Confirm password
+      <input type="password" name="confirm_password" required minlength="6">
+    </label>
+    <button type="submit">Create owner account</button>
+  </form>
+{% endblock %}
