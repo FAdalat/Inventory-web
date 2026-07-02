@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Sell{% endblock %}
+
+{% block content %}
+  <h2>Sell</h2>
+
+  <form method="POST" action="{{ url_for('sell_add') }}" class="row-form">
+    <label>Product
+      <select name="product_id" required>
+        {% for p in products %}
+          <option value="{{ p.id }}">{{ p.name }} — {{ p.quantity }} in stock — ${{ "%.2f"|format(p.sell_price) }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Quantity
+      <input type="number" name="quantity" min="1" value="1" required>
+    </label>
+    <button type="submit">Add to sale</button>
+  </form>
+
+  <h3>Current sale</h3>
+  <table>
+    <thead>
+      <tr><th>Product</th><th>Qty</th><th>Unit price</th><th>Line total</th></tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+        <tr>
+          <td>{{ item.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ "%.2f"|format(item.unit_price) }}</td>
+          <td>${{ "%.2f"|format(item.quantity * item.unit_price) }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4">No items yet — add a product above.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="total">Total: ${{ "%.2f"|format(total) }}</p>
+
+  <div class="row-form">
+    <form method="POST" action="{{ url_for('checkout') }}">
+      <button type="submit" {{ 'disabled' if not cart else '' }}>Checkout</button>
+    </form>
+    <form method="POST" action="{{ url_for('sell_cancel') }}"
+          onsubmit="return confirm('Cancel this sale and restock items?');">
+      <button type="submit" class="secondary" {{ 'disabled' if not cart else '' }}>Cancel sale</button>
+    </form>
+  </div>
+{% endblock %}
