@@ -45,7 +45,6 @@ the app running — e.g. `docs/screenshot-report.png`.)*
 ## Getting started
 
 ```bash
-git clone <your-repo-url>
 cd inventory-web
 pip install -r requirements.txt
 python app.py
