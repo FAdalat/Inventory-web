@@ -1,5 +1,5 @@
 # Inventory & POS System
-
+#### Video Demo: `https://youtu.be/_2LluyesaJY`
 A role-based inventory and point-of-sale web app for small retail or wholesale
 businesses, built with **Flask** and **SQLAlchemy**. Started life as a CS50P
 CLI tool (buy / sell / report over a CSV file) and has grown into a proper
@@ -30,8 +30,10 @@ persistent sale history.
 
 ## Screenshots
 
-*(Add screenshots of the Report, Sell, and Employees pages here once you have
-the app running — e.g. `docs/screenshot-report.png`.)*
+<img width="700" alt="p1" src="https://github.com/user-attachments/assets/cbd19547-a1fc-4f48-821b-8e9ec4e38e10" />
+<img width="700" alt="p3" src="https://github.com/user-attachments/assets/312a5903-739a-4611-9f35-a620ae382818" />
+<img width="700" alt="p2" src="https://github.com/user-attachments/assets/89e65262-c194-42e1-b25b-bef3bfea1123" />
+
 
 ## Tech stack
 
