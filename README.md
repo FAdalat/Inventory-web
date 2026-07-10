@@ -1,4 +1,5 @@
 # Inventory & POS System
+Video Link: https://youtu.be/WJFrkC3xlQw
 
 A role-based inventory and point-of-sale web app for small retail or wholesale
 businesses, built with **Flask** and **SQLAlchemy**. Started life as a CS50P
