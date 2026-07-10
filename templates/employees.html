@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Employees{% endblock %}
+
+{% block content %}
+  <h2>Employees</h2>
+
+  <h3>Add sales manager</h3>
+  <form method="POST" action="{{ url_for('add_employee') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Username
+      <input type="text" name="username" required>
+    </label>
+    <label>Password
+      <input type="password" name="password" required minlength="10"
+             pattern="(?=.*[a-z])(?=.*[A-Z]).{10,}"
+             title="At least 10 characters, including one uppercase and one lowercase letter">
+    </label>
+    <p class="hint">At least 10 characters, with at least one uppercase and one lowercase letter.</p>
+    <label>Confirm password
+      <input type="password" name="confirm_password" required minlength="10">
+    </label>
+    <label>Fixed wage
+      <input type="number" step="0.01" min="0" name="fixed_wage" required>
+    </label>
+    <label>Commission per sale (%)
+      <input type="number" step="0.01" min="0" max="100" name="commission_percent" required>
+    </label>
+    <button type="submit">Add sales manager</button>
+  </form>
+
+  <div class="page-header">
+    <h3>All accounts</h3>
+    <a href="{{ url_for('export_employees') }}" class="btn-link">⬇ Export to Excel</a>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th><th>Role</th><th>Status</th>
+        <th>Fixed wage</th><th>Commission %</th>
+        <th>Sales made</th><th>Revenue generated</th><th>Commission earned</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for emp in employees %}
+        <tr class="{{ 'inactive-row' if not emp.active else '' }}">
+          <td>{{ emp.username }}{% if emp.id == current_user.id %} (you){% endif %}</td>
+          <td>{{ 'Shop owner' if emp.role == 'owner' else 'Sales manager' }}</td>
+          <td>{{ 'Active' if emp.active else 'Fired' }}</td>
+          <td>${{ "%.2f"|format(emp.fixed_wage) }}</td>
+          <td>{{ "%g"|format(emp.commission_percent) }}%</td>
+          {% if emp.role == 'manager' %}
+            <td>{{ earnings[emp.id].sales_count }}</td>
+            <td>${{ "%.2f"|format(earnings[emp.id].revenue) }}</td>
+            <td>${{ "%.2f"|format(earnings[emp.id].commission_earned) }}</td>
+          {% else %}
+            <td class="hint">—</td>
+            <td class="hint">—</td>
+            <td class="hint">—</td>
+          {% endif %}
+          <td class="actions">
+            <form method="POST" action="{{ url_for('update_employee_pay', user_id=emp.id) }}"
+                  class="pay-form">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="number" step="0.01" min="0" name="fixed_wage"
+                     value="{{ emp.fixed_wage }}" title="Fixed wage">
+              <input type="number" step="0.01" min="0" max="100" name="commission_percent"
+                     value="{{ emp.commission_percent }}" title="Commission %">
+              <button type="submit">Update pay</button>
+            </form>
+            {% if emp.role == 'manager' %}
+              <form method="POST" action="{{ url_for('promote_employee', user_id=emp.id) }}"
+                    onsubmit="return confirm('Make {{ emp.username }} a shop owner? This can\'t be undone from here.');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit">Make owner</button>
+              </form>
+              {% if emp.active %}
+                <form method="POST" action="{{ url_for('fire_employee', user_id=emp.id) }}"
+                      onsubmit="return confirm('Fire {{ emp.username }}?');">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="danger">Fire</button>
+                </form>
+              {% else %}
+                <form method="POST" action="{{ url_for('reinstate_employee', user_id=emp.id) }}">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit">Reinstate</button>
+                </form>
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="hint">Sales made, revenue, and commission earned are all-time totals across every sale a manager has made.</p>
+{% endblock %}

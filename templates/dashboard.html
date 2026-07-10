@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+  <h2>Daily Dashboard</h2>
+
+  <form method="GET" class="row-form">
+    <label>Date
+      <input type="date" name="date" value="{{ selected_date.isoformat() }}"
+             onchange="this.form.submit()" max="{{ today }}">
+    </label>
+  </form>
+
+  <div class="stat-cards">
+    <div class="stat-card">
+      <span class="stat-label">Sales made</span>
+      <span class="stat-value">{{ sales_count }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Items sold</span>
+      <span class="stat-value">{{ items_sold }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Turnover</span>
+      <span class="stat-value">${{ "%.2f"|format(turnover) }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Discounts given</span>
+      <span class="stat-value">${{ "%.2f"|format(discount_given) }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Profit</span>
+      <span class="stat-value {{ 'stat-negative' if profit < 0 else '' }}">${{ "%.2f"|format(profit) }}</span>
+    </div>
+  </div>
+
+  <h3>By employee</h3>
+  <table>
+    <thead>
+      <tr><th>Employee</th><th>Sales</th><th>Revenue</th><th>Commission %</th><th>Commission earned</th></tr>
+    </thead>
+    <tbody>
+      {% for row in breakdown %}
+        <tr>
+          <td>{{ row.username }}</td>
+          <td>{{ row.sales_count }}</td>
+          <td>${{ "%.2f"|format(row.revenue) }}</td>
+          <td>{{ "%g"|format(row.commission_percent) }}%</td>
+          <td>${{ "%.2f"|format(row.commission_earned) }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">No sales on this day.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="hint">Profit is based on each item's cost and actual charged price (after any discount) at the moment it was sold, so it won't change later if a product's cost or discount changes. A heavily discounted day can show $0 or negative profit — that's shown as-is, not hidden.</p>
+{% endblock %}

@@ -5,6 +5,7 @@
   <h2>Log in</h2>
 
   <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <label>Username
       <input type="text" name="username" required autofocus>
     </label>

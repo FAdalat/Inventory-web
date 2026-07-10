@@ -1,0 +1,23 @@
+{% if ai_latest_insight %}
+  {% set c = ai_latest_insight.content() %}
+  <p class="ai-generated-at hint">Generated {{ ai_latest_insight.generated_at | localtime }}</p>
+  {% if c.summary %}<p>{{ c.summary }}</p>{% endif %}
+  {% if c.top_products %}
+    <strong>Top products</strong>
+    <ul>{% for b in c.top_products %}<li>{{ b }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% if c.slow_products %}
+    <strong>Slow movers</strong>
+    <ul>{% for b in c.slow_products %}<li>{{ b }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% if c.recommendations %}
+    <strong>Recommendations</strong>
+    <ul>{% for b in c.recommendations %}<li>{{ b }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% if c.warnings %}
+    <strong>Watch out for</strong>
+    <ul class="ai-warnings">{% for b in c.warnings %}<li>{{ b }}</li>{% endfor %}</ul>
+  {% endif %}
+{% else %}
+  <p class="hint">No report generated yet for {{ ai_current_month }}.</p>
+{% endif %}

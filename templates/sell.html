@@ -5,6 +5,7 @@
   <h2>Sell</h2>
 
   <form method="POST" action="{{ url_for('sell_add') }}" class="row-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <label>Product
       <select name="product_id" required>
         {% for p in products %}
@@ -37,14 +38,33 @@
     </tbody>
   </table>
 
-  <p class="total">Total: ${{ "%.2f"|format(total) }}</p>
+  <h3>Checkout discount</h3>
+  <p class="hint">Applies to the whole order, not any single item — enter 0 to remove it.</p>
+  <form method="POST" action="{{ url_for('set_cart_discount') }}" class="row-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Discount %
+      <input type="number" name="discount_percent" min="0" max="100" step="0.1"
+             value="{{ discount_percent if discount_percent else '' }}" placeholder="0">
+    </label>
+    <button type="submit" class="secondary">Apply discount</button>
+  </form>
+
+  <div class="totals-box">
+    <p class="totals-row"><span>Subtotal</span><span>${{ "%.2f"|format(subtotal) }}</span></p>
+    {% if discount_percent %}
+      <p class="totals-row"><span>Discount ({{ "%g"|format(discount_percent) }}%)</span><span>-${{ "%.2f"|format(subtotal - total) }}</span></p>
+    {% endif %}
+    <p class="totals-row total"><span>Total</span><span>${{ "%.2f"|format(total) }}</span></p>
+  </div>
 
   <div class="row-form">
     <form method="POST" action="{{ url_for('checkout') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <button type="submit" {{ 'disabled' if not cart else '' }}>Checkout</button>
     </form>
     <form method="POST" action="{{ url_for('sell_cancel') }}"
           onsubmit="return confirm('Cancel this sale and restock items?');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <button type="submit" class="secondary" {{ 'disabled' if not cart else '' }}>Cancel sale</button>
     </form>
   </div>

@@ -55,10 +55,109 @@ button[type="submit"] {
   background: #2563eb; color: #fff; border: none; padding: 0.6rem 1rem;
   border-radius: 6px; cursor: pointer; font-size: 1rem; width: fit-content;
 }
-button[type="submit"].secondary { background: #6b7280; }
+button.secondary {
+  background: #6b7280; color: #fff; border: none; padding: 0.5rem 0.9rem;
+  border-radius: 6px; cursor: pointer; font-size: 0.9rem; width: fit-content;
+}
 button[disabled] { opacity: 0.5; cursor: not-allowed; }
 .total { font-size: 1.2rem; font-weight: 700; text-align: right; }
+.totals-box {
+  max-width: 320px; margin-left: auto; margin-bottom: 1rem;
+}
+.totals-row {
+  display: flex; justify-content: space-between; margin: 0.2rem 0; font-size: 0.95rem;
+}
+.totals-row.total { font-size: 1.2rem; font-weight: 700; border-top: 1px solid #ddd; padding-top: 0.4rem; margin-top: 0.4rem; }
+.stat-cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem; margin: 1.5rem 0;
+}
+.stat-card {
+  background: #fff; border: 1px solid #eee; border-radius: 8px;
+  padding: 1rem; display: flex; flex-direction: column; gap: 0.25rem;
+}
+.stat-label { font-size: 0.8rem; text-transform: uppercase; color: #666; }
+.stat-value { font-size: 1.6rem; font-weight: 700; }
+.stat-value.stat-negative { color: #b91c1c; }
+.pay-form {
+  flex-direction: row; align-items: center; gap: 0.4rem; max-width: none; display: inline-flex;
+}
+.pay-form input { width: 5.5rem; padding: 0.3rem; }
+.pay-form button[type="submit"] {
+  background: #2563eb; color: #fff; padding: 0.4rem 0.7rem; font-size: 0.85rem;
+}
 .hint { color: #666; font-size: 0.9rem; margin-top: -0.5rem; }
 .flashes { list-style: none; padding: 0; margin-bottom: 1rem; }
 .flash-success { color: #15803d; }
 .flash-info { color: #1d4ed8; }
+
+/* AI Insights widget: fixed bottom-right, collapsed to a pill button by
+   default so it never blocks page content until the owner opens it. */
+.ai-widget {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+}
+.ai-widget-toggle {
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.15rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+.ai-widget.collapsed .ai-widget-panel { display: none; }
+.ai-widget:not(.collapsed) .ai-widget-toggle { display: none; }
+.ai-widget-panel {
+  position: absolute;
+  bottom: 3.4rem;
+  right: 0;
+  width: 340px;
+  max-height: 75vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+}
+.ai-widget-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.6rem; padding-bottom: 0.6rem; border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+.ai-widget-close {
+  background: none; border: none; font-size: 1.3rem; line-height: 1;
+  cursor: pointer; color: #888; padding: 0;
+}
+.ai-widget-body strong {
+  display: block; margin-top: 0.7rem; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.02em; color: #555;
+}
+.ai-widget-body p { font-size: 0.9rem; margin: 0.4rem 0; }
+.ai-widget-body ul { margin: 0.3rem 0 0.2rem 1.1rem; padding: 0; }
+.ai-widget-body li { font-size: 0.87rem; margin-bottom: 0.3rem; }
+.ai-widget-body .ai-warnings li { color: #b91c1c; }
+.ai-generated-at { margin-top: 0 !important; }
+.ai-widget-footer {
+  margin-top: 0.8rem; padding-top: 0.7rem; border-top: 1px solid #eee;
+}
+.ai-widget-footer button[type="button"] {
+  width: 100%; background: #7c3aed;
+}
+.ai-widget-footer button[type="button"]:disabled { opacity: 0.6; cursor: wait; }
+
+.page-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;
+}
+.page-header h2, .page-header h3 { margin: 0; }
+.btn-link {
+  background: #15803d; color: #fff; text-decoration: none;
+  padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem;
+  font-weight: 600; white-space: nowrap;
+}
+.btn-link:hover { background: #166534; }

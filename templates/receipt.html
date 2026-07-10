@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Receipt #{{ sale.id }}{% endblock %}
+
+{% block content %}
+  <h2>Receipt #{{ sale.id }}</h2>
+  <p class="hint">{{ sale.created_at | localtime }} (local time)</p>
+  {% if current_user.is_owner and sale.user %}
+    <p class="hint">Sold by {{ sale.user.username }}</p>
+  {% endif %}
+
+  <table>
+    <thead>
+      <tr><th>Product</th><th>Qty</th><th>Unit price</th><th>Line total</th></tr>
+    </thead>
+    <tbody>
+      {% for item in sale.items %}
+        <tr>
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ "%.2f"|format(item.unit_price) }}</td>
+          <td>${{ "%.2f"|format(item.line_total) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals-box">
+    <p class="totals-row"><span>Subtotal</span><span>${{ "%.2f"|format(sale.subtotal) }}</span></p>
+    {% if sale.discount_percent %}
+      <p class="totals-row">
+        <span>Discount ({{ "%g"|format(sale.discount_percent) }}%)</span>
+        <span>-${{ "%.2f"|format(sale.discount_amount) }}</span>
+      </p>
+    {% endif %}
+    <p class="totals-row total"><span>Total</span><span>${{ "%.2f"|format(sale.total) }}</span></p>
+  </div>
+
+  <p><a href="{{ url_for('sales') }}">← Back to sales history</a></p>
+{% endblock %}

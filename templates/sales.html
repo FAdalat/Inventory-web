@@ -2,7 +2,10 @@
 {% block title %}Sales{% endblock %}
 
 {% block content %}
-  <h2>Sales History</h2>
+  <div class="page-header">
+    <h2>Sales History</h2>
+    <a href="{{ url_for('export_sales') }}" class="btn-link">⬇ Export to Excel</a>
+  </div>
   {% if not current_user.is_owner %}
     <p class="hint">Showing sales you made.</p>
   {% endif %}
@@ -11,23 +14,30 @@
       <tr>
         <th>#</th><th>Date</th>
         {% if current_user.is_owner %}<th>Sold by</th>{% endif %}
-        <th>Items</th><th>Total</th><th></th>
+        <th>Items</th><th>Discount</th><th>Total</th><th></th>
       </tr>
     </thead>
     <tbody>
       {% for sale in sales %}
         <tr>
           <td>{{ sale.id }}</td>
-          <td>{{ sale.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+          <td>{{ sale.created_at | localtime }}</td>
           {% if current_user.is_owner %}
             <td>{{ sale.user.username if sale.user else "—" }}</td>
           {% endif %}
           <td>{{ sale.items|length }}</td>
+          <td>
+            {% if sale.discount_percent %}
+              {{ "%g"|format(sale.discount_percent) }}% (-${{ "%.2f"|format(sale.discount_amount) }})
+            {% else %}
+              <span class="hint">—</span>
+            {% endif %}
+          </td>
           <td>${{ "%.2f"|format(sale.total) }}</td>
           <td><a href="{{ url_for('receipt', sale_id=sale.id) }}">View receipt</a></td>
         </tr>
       {% else %}
-        <tr><td colspan="6">No sales yet.</td></tr>
+        <tr><td colspan="7">No sales yet.</td></tr>
       {% endfor %}
     </tbody>
   </table>

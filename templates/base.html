@@ -4,12 +4,18 @@
   <meta charset="UTF-8">
   <title>{% block title %}Inventory & POS{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% if current_user.is_authenticated %}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+  {% endif %}
 </head>
 <body>
   <header>
     <h1><a href="{{ url_for('products') }}">📦 Inventory & POS</a></h1>
     <nav>
       {% if current_user.is_authenticated %}
+        {% if current_user.is_owner %}
+          <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        {% endif %}
         <a href="{{ url_for('products') }}">Report</a>
         {% if current_user.is_owner %}
           <a href="{{ url_for('add_product') }}">Buy</a>
@@ -40,5 +46,30 @@
 
     {% block content %}{% endblock %}
   </main>
+
+  {% if current_user.is_authenticated and current_user.is_owner %}
+    <div id="ai-widget" class="ai-widget collapsed">
+      <button id="ai-widget-toggle" class="ai-widget-toggle" type="button">✨ AI Insights</button>
+      <div class="ai-widget-panel">
+        <div class="ai-widget-header">
+          <strong>Monthly Insights — {{ ai_current_month }}</strong>
+          <button id="ai-widget-close" type="button" class="ai-widget-close" aria-label="Close">×</button>
+        </div>
+        <div id="ai-widget-body" class="ai-widget-body">
+          {% include "_ai_insight_content.html" %}
+        </div>
+        <div class="ai-widget-footer">
+          {% if ai_configured %}
+            <button id="ai-generate-btn" type="button">
+              {{ 'Regenerate report' if ai_latest_insight else 'Generate report' }}
+            </button>
+          {% else %}
+            <p class="hint">Set ANTHROPIC_API_KEY in .env to enable this (see .env.example).</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='ai_widget.js') }}"></script>
+  {% endif %}
 </body>
 </html>
