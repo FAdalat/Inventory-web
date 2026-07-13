@@ -76,7 +76,7 @@ persistent sale history.
 ## Getting started
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/FAdalat/Inventory-web
 cd inventory-web
 pip install -r requirements.txt
 cp .env.example .env
